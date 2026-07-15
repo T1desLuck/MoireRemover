@@ -185,7 +185,3 @@ MoireRemover/
 
 По вопросам и багам плагина: **tidesluck@icloud.com**
 (эта же почта указана прямо в панели плагина в Photoshop).
-
-## Лицензия
-
-`LICENSE`

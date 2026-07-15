@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Moire Remover</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="panel">
+    <div class="header">
+      <div class="title">Удаление муара</div>
+      <div class="subtitle">Автоматически, по верхнему выбранному слою</div>
+    </div>
+
+    <button id="runBtn" class="run-btn">
+      <span class="run-btn-label">Убрать муар</span>
+    </button>
+
+    <div id="progressWrap" class="progress-wrap hidden">
+      <div class="progress-track">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div id="progressLabel" class="progress-label">Готово к работе</div>
+    </div>
+
+    <div id="errorBox" class="error-box hidden"></div>
+    <div id="successBox" class="success-box hidden"></div>
+
+    <button id="advancedToggle" class="advanced-toggle">Дополнительные настройки ▾</button>
+    <div id="advancedPanel" class="advanced-panel hidden">
+      <label class="field checkbox-field">
+        <span><input type="checkbox" id="ringEnabled" checked /> Убирать также фактуру бумаги (рельеф, не цветной)</span>
+        <span class="hint">Отдельный, более мягкий фильтр для равномерной мелкой фактуры (наждачка/рельеф), которая не даёт резкой точечной сетки, а размазана по всей площади фото.</span>
+      </label>
+      <label class="field">
+        <span>Порог фактуры: <span id="ringVal">2.5</span> дБ</span>
+        <input id="ringSlider" type="range" min="1" max="6" step="0.5" value="2.5" />
+        <span class="hint">Меньше — убирает даже слабую фактуру (риск слегка смягчить мелкие детали). Больше — только выраженный рельеф.</span>
+      </label>
+      <label class="field">
+        <span>Чувствительность (точечный муар): <span id="sensVal">6.0</span></span>
+        <input id="sensSlider" type="range" min="3" max="10" step="0.5" value="6" />
+        <span class="hint">Меньше — уберёт больше (риск задеть детали). Больше — уберёт только явный муар/цветной шум.</span>
+      </label>
+      <label class="field">
+        <span>Радиус подавления: <span id="notchVal">6</span> px</span>
+        <input id="notchSlider" type="range" min="2" max="8" step="1" value="6" />
+      </label>
+    </div>
+
+    <div class="footer-note">
+      Результат добавляется новым слоем сверху — исходный слой не изменяется.<br />
+      Связь по плагину: tidesluck@icloud.com
+    </div>
+  </div>
+
+  <script src="fft.js"></script>
+  <script src="moire.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

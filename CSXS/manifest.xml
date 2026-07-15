@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="7.0" ExtensionBundleId="com.restoration.moireremover" ExtensionBundleVersion="1.0.0" xmlns:ExtensionBundleId="http://ns.adobe.com/extension">
+  <ExtensionList>
+    <Extension Id="com.restoration.moireremover.panel" Version="1.0.0" />
+  </ExtensionList>
+  <ExecutionEnvironment>
+    <HostList>
+      <!-- PHXS = Photoshop. 19.0 = Photoshop 2018. 99.9 covers all future versions too. -->
+      <Host Name="PHXS" Version="[19.0,99.9]" />
+    </HostList>
+    <LocaleList>
+      <Locale Code="All" />
+    </LocaleList>
+    <RequiredRuntimeList>
+      <RequiredRuntime Name="CSXS" Version="9.0" />
+    </RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList>
+    <Extension Id="com.restoration.moireremover.panel">
+      <DispatchInfo>
+        <Resources>
+          <MainPath>./client/index.html</MainPath>
+          <ScriptPath>./jsx/hostscript.jsx</ScriptPath>
+          <CEFCommandLine>
+            <Parameter>--enable-nodejs</Parameter>
+            <Parameter>--mixed-context</Parameter>
+          </CEFCommandLine>
+        </Resources>
+        <Lifecycle>
+          <AutoVisible>true</AutoVisible>
+        </Lifecycle>
+        <UI>
+          <Type>Panel</Type>
+          <Menu>Moire Remover (Auto)</Menu>
+          <Geometry>
+            <Size>
+              <Width>340</Width>
+              <Height>320</Height>
+            </Size>
+            <MinSize>
+              <Width>300</Width>
+              <Height>260</Height>
+            </MinSize>
+            <MaxSize>
+              <Width>600</Width>
+              <Height>900</Height>
+            </MaxSize>
+          </Geometry>
+        </UI>
+      </DispatchInfo>
+    </Extension>
+  </DispatchInfoList>
+</ExtensionManifest>

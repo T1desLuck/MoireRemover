@@ -1,22 +1,23 @@
 // ============================================================
-// НАСТРОЙКИ — поменяйте под свой репозиторий
+// НАСТРОЙКИ
 // ============================================================
-const GITHUB_REPO = "USERNAME/MoireRemover"; // <-- замените на "владелец/репозиторий"
-const INSTALLER_FILENAME = "MoireRemover_Setup.exe"; // имя exe-файла в Releases
+const GITHUB_REPO = "T1desLuck/MoireRemover"; // владелец/репозиторий
+const GITHUB_BRANCH = "main"; // если ветка называется "master" — поменяйте здесь
+const INSTALLER_FILENAME = "MoireRemover_Setup.exe"; // имя .exe в корне репозитория
 
+// Файл лежит прямо в репозитории (не в Releases), поэтому обычная ссылка
+// github.com/.../blob/... открывает страницу просмотра, а не скачивает файл.
+// raw.githubusercontent.com отдаёт сами байты файла — браузер сохраняет .exe сразу.
 (function setupLinks() {
   const repoUrl = `https://github.com/${GITHUB_REPO}`;
-  const downloadUrl = `${repoUrl}/releases/latest/download/${INSTALLER_FILENAME}`;
-  const releasesUrl = `${repoUrl}/releases`;
+  const downloadUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${INSTALLER_FILENAME}`;
 
   document.querySelectorAll("[data-download]").forEach((el) => {
     el.setAttribute("href", downloadUrl);
+    el.setAttribute("download", INSTALLER_FILENAME);
   });
   document.querySelectorAll("[data-repo]").forEach((el) => {
     el.setAttribute("href", repoUrl);
-  });
-  document.querySelectorAll("[data-releases]").forEach((el) => {
-    el.setAttribute("href", releasesUrl);
   });
 })();
 

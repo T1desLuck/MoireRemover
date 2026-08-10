@@ -2,20 +2,21 @@
    MoireRemover — design tokens
    ============================================================ */
 :root{
-  --bg:        #13110c;
-  --bg-soft:   #191510;
-  --card:      #201a12;
-  --card-2:    #241d13;
-  --line:      #382f1e;
-  --line-soft: #2a2417;
+  --bg:        #faf6ec;
+  --bg-soft:   #f1ead9;
+  --card:      #fffdf7;
+  --card-2:    #f4ecd8;
+  --line:      #e0d5b8;
+  --line-soft: #ece3cc;
 
-  --ink:       #f2e9d8;
-  --ink-dim:   #b8ab90;
-  --ink-faint: #8a7d64;
+  --ink:       #2a2317;
+  --ink-dim:   #6b6047;
+  --ink-faint: #9a8f70;
 
-  --amber:     #ff8a3d;
+  --amber:     #e07a2c;
   --amber-dim: #c96a2c;
-  --cyan:      #6fd6c4;
+  --amber-bg:  #ff8a3d;
+  --cyan:      #1c8577;
 
   --serif:  "Fraunces", "Georgia", serif;
   --sans:   "Inter", -apple-system, "Segoe UI", sans-serif;
@@ -59,9 +60,9 @@ body::before{
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background-image: radial-gradient(rgba(242,233,216,0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(42,35,23,0.045) 1px, transparent 1px);
   background-size: 4px 4px;
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
 }
 
 img{ max-width: 100%; display: block; }
@@ -111,7 +112,7 @@ p{ margin: 0; color: var(--ink-dim); }
 /* ---------- nav ---------- */
 .nav{
   position: sticky; top: 0; z-index: 40;
-  background: rgba(19,17,12,0.82);
+  background: rgba(250,246,236,0.86);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line-soft);
 }
@@ -146,7 +147,7 @@ p{ margin: 0; color: var(--ink-dim); }
   transition: background .2s, color .2s;
   white-space: nowrap;
 }
-.nav-cta:hover, .nav-cta:focus-visible{ background: var(--amber); color: #14110b !important; }
+.nav-cta:hover, .nav-cta:focus-visible{ background: var(--amber-bg); color: #1c1206 !important; border-color: var(--amber-bg); }
 
 /* ---------- buttons ---------- */
 .btn{
@@ -163,10 +164,11 @@ p{ margin: 0; color: var(--ink-dim); }
 }
 .btn:active{ transform: translateY(1px); }
 .btn-primary{
-  background: var(--amber);
-  color: #17110a;
+  background: var(--amber-bg);
+  color: #1c1206;
+  box-shadow: 0 6px 20px rgba(224,122,44,0.28);
 }
-.btn-primary:hover, .btn-primary:focus-visible{ background: #ffa561; }
+.btn-primary:hover, .btn-primary:focus-visible{ background: #ff9a52; }
 .btn-primary svg{ flex: none; }
 .btn-ghost{
   background: transparent;
@@ -349,8 +351,8 @@ section{ padding: 88px 0; position: relative; z-index: 1; }
   content: "";
   position: absolute; top: 0; bottom: 0; left: -1px;
   width: 2px;
-  background: var(--amber);
-  box-shadow: 0 0 12px rgba(255,138,61,0.6);
+  background: var(--amber-bg);
+  box-shadow: 0 0 10px rgba(255,138,61,0.7);
 }
 .compare-handle::after{
   content: "↔";
@@ -358,11 +360,11 @@ section{ padding: 88px 0; position: relative; z-index: 1; }
   transform: translate(-50%, -50%);
   width: 38px; height: 38px;
   border-radius: 50%;
-  background: var(--amber);
-  color: #17110a;
+  background: var(--amber-bg);
+  color: #1c1206;
   display: flex; align-items: center; justify-content: center;
   font-size: 1rem;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 16px rgba(42,35,23,0.28);
 }
 .compare-range{
   position: absolute; inset: 0;
@@ -600,4 +602,30 @@ pre{
   section{ padding: 64px 0; }
   .flow-step{ grid-template-columns: 44px 1fr; padding: 20px; }
   .limits{ padding: 30px 24px; }
+  .spectrum{ max-width: 320px; }
+}
+
+@media (max-width: 560px){
+  .wrap{ padding: 0 18px; }
+  .hero{ padding-top: 40px; padding-bottom: 24px; }
+  .hero-grid{ gap: 32px; }
+  section{ padding: 52px 0; }
+  .nav .wrap{ padding-top: 13px; padding-bottom: 13px; }
+  .nav-logo{ font-size: 0.78rem; }
+  .nav-cta{ padding: 8px 12px; font-size: 0.7rem; }
+  .btn{ width: 100%; justify-content: center; padding: 14px 20px; }
+  .btn-row{ flex-direction: column; align-items: stretch; }
+  .cta-band .btn-row{ align-items: stretch; }
+  .spectrum{ max-width: 240px; }
+  .spectrum-caption{ font-size: 0.6rem; white-space: normal; text-align: center; width: 90%; }
+  .cap-card{ padding: 24px 20px; }
+  .split-col{ padding: 28px 22px; }
+  .compare{ aspect-ratio: 4 / 5; }
+  .compare-tag{ font-size: 0.6rem; padding: 4px 8px; }
+  .compare-handle::after{ width: 32px; height: 32px; font-size: 0.85rem; }
+  table.spec-table{ display: block; overflow-x: auto; white-space: nowrap; }
+  .flow-step{ grid-template-columns: 36px 1fr; gap: 14px; padding: 16px; }
+  .tree{ font-size: 0.72rem; padding: 18px; }
+  .footer-grid{ flex-direction: column; align-items: flex-start; }
+  .cta-band{ padding: 60px 0; }
 }

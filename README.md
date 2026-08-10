@@ -11,6 +11,10 @@
   <img src="image/1.jpg" width="46%" alt="До обработки">
   &nbsp;&nbsp;
   <img src="image/2.jpg" width="46%" alt="После обработки">
+  &nbsp;&nbsp;
+  <img src="image/3.jpg" width="46%" alt="До обработки">
+  &nbsp;&nbsp;
+  <img src="image/4.jpg" width="46%" alt="После обработки">
 </p>
 <p align="center"><i>Слева — исходный скан с муаром, справа — результат работы плагина.</i></p>
 

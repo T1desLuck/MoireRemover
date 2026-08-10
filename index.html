@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoireRemover — автоматическое удаление муара в Photoshop</title>
+<meta name="description" content="CEP-плагин для Adobe Photoshop, который одним нажатием убирает точечный муар растровой печати и фактуру матовой фотобумаги со сканов. Полностью автоматически.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380..620&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="#" class="nav-logo">
+      <span class="dot-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="var(--amber)" stroke-width="1.4"/><circle cx="9" cy="9" r="1.8" fill="var(--amber)"/></svg>
+      </span>
+      MOIRE&nbsp;REMOVER
+    </a>
+    <ul class="nav-links">
+      <li><a href="#capabilities">Что убирает</a></li>
+      <li><a href="#gallery">Примеры</a></li>
+      <li><a href="#compare-old">Чем отличается</a></li>
+      <li><a href="tech.html">Как устроен</a></li>
+    </ul>
+    <a class="nav-cta" data-download href="#" download>Скачать .exe</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">CEP-плагин для Adobe Photoshop</span>
+      <h1>Муар сам находит.<br>Сам&nbsp;убирает.</h1>
+      <p class="hero-sub">
+        MoireRemover сканирует спектр изображения, сам отличает сеточный
+        муар растровой печати и мелкую фактуру матовой фотобумаги от
+        настоящей картинки — и убирает и то, и другое одним нажатием.
+        Без ручного стирания точек в спектре, как в классических
+        FFT/IFFT-плагинах.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" data-download href="#" download>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5V11M8 11L4 7M8 11L12 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 13.5H13.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Скачать установщик
+        </a>
+        <a class="btn btn-ghost" href="#gallery">Смотреть примеры</a>
+      </div>
+      <p class="btn-note">Установщик — Windows · macOS ставится копированием папки, см. «Как устроен»</p>
+
+      <div class="badge-strip">
+        <span>Photoshop 2020 и новее</span>
+        <span>Лицензия и пиратка — без разницы</span>
+        <span>Windows и macOS</span>
+        <span>Полностью офлайн, без сети</span>
+      </div>
+    </div>
+
+    <div class="spectrum" aria-hidden="true">
+      <svg viewBox="0 0 400 400" class="spec-ring">
+        <circle cx="200" cy="200" r="196" fill="none" stroke="var(--line)" stroke-width="1"/>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="1 6"/>
+        <g class="spec-noise">
+<circle cx="318.0" cy="200.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="316.9" cy="216.1" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="313.6" cy="231.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="308.2" cy="247.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="300.8" cy="261.3" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="291.5" cy="274.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="280.5" cy="286.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="268.0" cy="296.4" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="254.3" cy="304.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="239.5" cy="311.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="224.0" cy="315.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="208.1" cy="317.7" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="191.9" cy="317.7" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="176.0" cy="315.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="160.5" cy="311.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="145.7" cy="304.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="132.0" cy="296.4" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="119.5" cy="286.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="108.5" cy="274.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="99.2" cy="261.3" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="91.8" cy="247.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="86.4" cy="231.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="83.1" cy="216.1" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="82.0" cy="200.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="83.1" cy="183.9" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="86.4" cy="168.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="91.8" cy="153.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="99.2" cy="138.7" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="108.5" cy="125.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="119.5" cy="113.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="132.0" cy="103.6" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="145.7" cy="95.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="160.5" cy="88.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="176.0" cy="84.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="191.9" cy="82.3" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="208.1" cy="82.3" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="224.0" cy="84.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="239.5" cy="88.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="254.3" cy="95.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="268.0" cy="103.6" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="280.5" cy="113.8" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="291.5" cy="125.5" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="300.8" cy="138.7" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="308.2" cy="153.0" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="313.6" cy="168.2" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+<circle cx="316.9" cy="183.9" r="2.1" fill="var(--cyan)" fill-opacity="0.55"/>
+        </g>
+        <g class="spec-noise">
+<circle cx="169.0" cy="262.0" r="3.4" fill="var(--amber)"/>
+<circle cx="163.9" cy="149.7" r="3.4" fill="var(--amber)"/>
+<circle cx="112.5" cy="179.9" r="3.4" fill="var(--amber)"/>
+<circle cx="296.4" cy="236.8" r="3.4" fill="var(--amber)"/>
+<circle cx="293.5" cy="222.5" r="3.4" fill="var(--amber)"/>
+<circle cx="257.6" cy="227.0" r="3.4" fill="var(--amber)"/>
+<circle cx="81.2" cy="261.0" r="3.4" fill="var(--amber)"/>
+<circle cx="254.3" cy="253.5" r="3.4" fill="var(--amber)"/>
+<circle cx="99.0" cy="95.9" r="3.4" fill="var(--amber)"/>
+        </g>
+        <circle cx="200" cy="200" r="3" fill="var(--ink)"/>
+      </svg>
+      <span class="spectrum-caption">2D FFT · точечный + кольцевой детектор</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="capabilities">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Что убирает</span>
+        <h2>Два разных муара — один клик</h2>
+        <p>Обработка идёт только по яркостному каналу (Y), поэтому цвет
+          скана не плывёт ни на одном из двух этапов.</p>
+      </div>
+      <div class="cap-grid">
+        <div class="cap-card reveal">
+          <span class="tag">Точечный детектор</span>
+          <h3>Сеточный и цветной муар</h3>
+          <p>Резкие одиночные всплески в спектре — классическая
+            интерференционная сетка растровой печати. Ищутся на фоне
+            собственного локального среднего по кругу того же радиуса.</p>
+          <div class="mini-spec">
+            <svg viewBox="0 0 300 76"><circle cx="150" cy="38" r="2" fill="var(--ink-faint)"/>
+              <circle cx="70" cy="20" r="3" fill="var(--amber)"/>
+              <circle cx="230" cy="55" r="3" fill="var(--amber)"/>
+              <circle cx="210" cy="15" r="3" fill="var(--amber)"/>
+              <circle cx="95" cy="60" r="3" fill="var(--amber)"/>
+              <circle cx="150" cy="10" r="3" fill="var(--amber)"/>
+              <circle cx="40" cy="45" r="2.4" fill="var(--ink-faint)" fill-opacity="0.4"/>
+              <circle cx="260" cy="35" r="2.4" fill="var(--ink-faint)" fill-opacity="0.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="cap-card reveal">
+          <span class="tag">Кольцевой детектор</span>
+          <h3>Фактура матовой бумаги</h3>
+          <p>Равномерно повышенное кольцо в спектре, а не единичные
+            точки. Медиана по кругу вместо среднего — чтобы резкие края
+            фото не принимались за текстуру. Низкие частоты не трогает
+            никогда: там живёт композиция кадра.</p>
+          <div class="mini-spec">
+            <svg viewBox="0 0 300 76"><circle cx="150" cy="38" r="30" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-opacity="0.7"/>
+              <circle cx="150" cy="38" r="2" fill="var(--ink-faint)"/>
+              <circle cx="150" cy="8" r="1.8" fill="var(--cyan)"/>
+              <circle cx="176" cy="20" r="1.8" fill="var(--cyan)"/>
+              <circle cx="180" cy="52" r="1.8" fill="var(--cyan)"/>
+              <circle cx="150" cy="68" r="1.8" fill="var(--cyan)"/>
+              <circle cx="120" cy="56" r="1.8" fill="var(--cyan)"/>
+              <circle cx="120" cy="22" r="1.8" fill="var(--cyan)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="gallery">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Примеры</span>
+        <h2>Потяните за круг — сравните сами</h2>
+        <p>Реальные сканы старых фотографий на матовой бумаге, до и после
+          одного нажатия кнопки в панели плагина.</p>
+      </div>
+
+      <div class="compare-block reveal">
+        <div class="compare-label"><span>Скан №1</span><span>сеточный муар + фактура бумаги</span></div>
+        <div class="compare">
+          <img class="img-after" src="image/2.jpg" alt="После обработки MoireRemover">
+          <img class="img-before" src="image/1.jpg" alt="Исходный скан с муаром">
+          <span class="compare-tag before">До</span>
+          <span class="compare-tag after">После</span>
+          <div class="compare-handle"></div>
+          <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Сравнить до и после">
+        </div>
+      </div>
+
+      <div class="compare-block reveal">
+        <div class="compare-label"><span>Скан №2</span><span>сеточный муар + фактура бумаги</span></div>
+        <div class="compare">
+          <img class="img-after" src="image/4.jpg" alt="После обработки MoireRemover">
+          <img class="img-before" src="image/3.jpg" alt="Исходный скан с муаром">
+          <span class="compare-tag before">До</span>
+          <span class="compare-tag after">После</span>
+          <div class="compare-handle"></div>
+          <input class="compare-range" type="range" min="0" max="100" value="50" aria-label="Сравнить до и после">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="compare-old">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Чем отличается от старого подхода</span>
+        <h2>Раньше — вручную. Теперь — само.</h2>
+        <p>Классический FFT/IFFT-плагин десятилетиями остаётся рабочей
+          лошадкой реставраторов — но требует ручной работы со спектром
+          при каждом скане.</p>
+      </div>
+
+      <div class="split reveal">
+        <div class="split-col">
+          <span class="tag">Раньше — FFT/IFFT вручную</span>
+          <h3>Ручная работа со спектром</h3>
+          <ul class="step-list">
+            <li><span class="n">01</span> Запустить прямое FFT-преобразование</li>
+            <li><span class="n">02</span> Вручную стереть ластиком «звёзды» шумных частот</li>
+            <li><span class="n">03</span> Запустить обратное IFFT</li>
+            <li><span class="n">04</span> Вручную вернуть цвет через смешение слоёв</li>
+          </ul>
+        </div>
+        <div class="split-col is-new">
+          <span class="tag">Теперь — MoireRemover</span>
+          <h3>Один клик</h3>
+          <p class="one-step">Нажали кнопку. <span>Готово.</span></p>
+          <ul class="step-list">
+            <li><span class="n">＋</span> Сам находит частоты муара и фактуры бумаги</li>
+            <li><span class="n">＋</span> Сам решает, где настоящая картинка, а где шум</li>
+            <li><span class="n">＋</span> Цвет никогда не плывёт — правится только Y-канал</li>
+            <li><span class="n">＋</span> Результат — новым слоем, исходник не трогается</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="limits">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Честно</span>
+        <h2>Ограничения, о которых лучше знать заранее</h2>
+      </div>
+      <div class="limits reveal">
+        <ul>
+          <li>Обработка идёт в 8 бит на канал — слой экспортируется во временный PNG. Для реставрации в высокой битности классический нативный плагин пока точнее.</li>
+          <li>Автоматическое распознавание — статистическая эвристика. На большинстве сканов срабатывает без настройки, но для экстремально сильной текстуры может понадобиться подвинуть ползунки.</li>
+          <li>Кольцевой детектор в редких случаях может слегка смягчить настоящий повторяющийся узор на фото — плетение ткани, рябь на воде. Спектрально это иногда неотличимо от фактуры бумаги.</li>
+          <li>Проверено на синтетических тестах и реальных сканах в процессе разработки — но не на такой большой выборке, как классический подход, которым пользуются больше 15 лет.</li>
+        </ul>
+        <p class="limits-more">Полный разбор алгоритма, детекторов и настроек — <a href="tech.html">на технической странице →</a></p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<section class="cta-band">
+  <div class="wrap">
+    <span class="eyebrow">Установка — копированием папки</span>
+    <h2 class="reveal">Без Creative Cloud и подписи расширения</h2>
+    <p class="reveal">Windows — готовый установщик. macOS и ручная установка на
+      Windows — короткая инструкция на технической странице.</p>
+    <div class="btn-row reveal">
+      <a class="btn btn-primary" data-download href="#" download>Скачать установщик</a>
+      <a class="btn btn-ghost" href="tech.html#install">Инструкция по установке</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="nav-logo" style="margin-bottom:10px;">
+        <svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="var(--amber)" stroke-width="1.4"/><circle cx="9" cy="9" r="1.8" fill="var(--amber)"/></svg>
+        MOIRE&nbsp;REMOVER
+      </div>
+      <p class="footer-mark">CEP-плагин для Adobe Photoshop 2020+ · Windows и macOS</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="tech.html">Техническая часть</a></li>
+      <li><a data-repo href="#">Исходный код на GitHub</a></li>
+      <li><a href="mailto:tidesluck@icloud.com">tidesluck@icloud.com</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

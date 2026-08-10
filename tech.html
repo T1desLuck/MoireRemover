@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Как устроен MoireRemover — техническая часть</title>
+<meta name="description" content="Архитектура CEP-плагина MoireRemover: 2D FFT, точечный и кольцевой детекторы муара, notch-фильтр, настройки и установка.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380..620&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="nav-logo">
+      <span class="dot-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="var(--amber)" stroke-width="1.4"/><circle cx="9" cy="9" r="1.8" fill="var(--amber)"/></svg>
+      </span>
+      MOIRE&nbsp;REMOVER
+    </a>
+    <ul class="nav-links">
+      <li><a href="#pipeline">Пайплайн</a></li>
+      <li><a href="#settings">Настройки</a></li>
+      <li><a href="#install">Установка</a></li>
+      <li><a href="#structure">Структура</a></li>
+    </ul>
+    <a class="nav-cta" data-download href="#" download>Скачать .exe</a>
+  </div>
+</nav>
+
+<header class="tech-hero">
+  <div class="wrap">
+    <a class="back-link" href="index.html">← На главную</a>
+    <span class="eyebrow">Техническая часть</span>
+    <h1>Что происходит по нажатию одной кнопки</h1>
+    <p>CEP-расширение (панель на HTML/JS + ExtendScript для связи с
+      Photoshop), а не UXP — поэтому ставится копированием папки, без
+      Creative Cloud и без подписи расширения. Вся математика — своя
+      реализация 2D FFT (Cooley-Tukey), без внешних библиотек, считается
+      прямо в панели.</p>
+  </div>
+</header>
+
+<main>
+  <section id="pipeline">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Пайплайн обработки</h2>
+        <p>Восемь шагов от нажатия кнопки до нового слоя с результатом.</p>
+      </div>
+      <div class="flow reveal">
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Проверка активного слоя</h3>
+            <p>Плагин проверяет, что активный слой — самый верхний слой документа.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Экспорт во временный PNG</h3>
+            <p>Слой экспортируется во временный PNG-файл через ExtendScript.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Перевод в YCbCr</h3>
+            <p>Дальнейшая обработка идёт только по яркостному каналу (Y) —
+              каналы цветности (Cb, Cr) не трогаются, поэтому цвет никогда не плывёт.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Прямое 2D FFT</h3>
+            <p>Собственная реализация Cooley-Tukey, написанная с нуля, без внешних библиотек.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Два независимых детектора</h3>
+            <p><b style="color:var(--ink)">Точечный</b> — резкие одиночные всплески на фоне
+              локального среднего по кругу того же радиуса: сеточный муар и цветной шум.<br>
+              <b style="color:var(--ink)">Кольцевой</b> — равномерно повышенная кольцевая
+              область, а не единичные точки. Медиана по кругу вместо среднего, чтобы
+              резкие прямые края фото (дают всплеск лишь в 1–2 направлениях) не принимались
+              за круговую текстуру бумаги. Низкие частоты не затрагиваются никогда — там
+              общая композиция кадра.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Notch-фильтр</h3>
+            <p>Найденные частоты гасятся гауссовым notch-фильтром — не до нуля, а до уровня
+              локального фона. Мягче, без резких артефактов.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Обратное FFT</h3>
+            <p>Изображение собирается обратно с исходным цветом, восстановленным из Cb/Cr.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="num"></div>
+          <div>
+            <h3>Новый слой сверху</h3>
+            <p>Результат кладётся новым слоем — исходный слой не изменяется никогда.
+              Не понравилось — удалите слой или уменьшите непрозрачность.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="settings">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Настройки</span>
+        <h2>По умолчанию трогать не обязательно</h2>
+        <p>Всё собрано в блоке «Дополнительные настройки» панели. Плагин
+          рассчитан на работу «в один клик» — но при желании можно
+          подстроить агрессивность под конкретный скан.</p>
+      </div>
+      <table class="spec-table reveal">
+        <thead>
+          <tr><th>Настройка</th><th>По умолчанию</th><th>Что делает</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Убирать фактуру бумаги</td>
+            <td class="mono">включено</td>
+            <td>Отдельный, более мягкий фильтр для равномерной мелкой фактуры (рельеф
+              бумаги), размазанной по всей площади, а не выглядящей резкой сеткой.</td>
+          </tr>
+          <tr>
+            <td>Порог фактуры</td>
+            <td class="mono">2.5 дБ</td>
+            <td>Насколько сильно кольцевая область должна выделяться, чтобы считаться
+              фактурой бумаги. Меньше — агрессивнее.</td>
+          </tr>
+          <tr>
+            <td>Чувствительность</td>
+            <td class="mono">6.0</td>
+            <td>То же самое, но для точечного (сеточного/цветного) муара. Меньше — агрессивнее.</td>
+          </tr>
+          <tr>
+            <td>Радиус подавления</td>
+            <td class="mono">6 px</td>
+            <td>Насколько широко гасится каждая найденная точка спектра. Не делайте
+              меньше 4–5 px без причины — на плотной печатной текстуре слишком узкий
+              радиус может сам оставить на однотонном фоне слабые новые полосы.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="reveal" style="margin-top:20px; font-size:0.94rem;">
+        Для очень сильной и контрастной текстуры (например, явное холщовое плетение,
+        а не тонкий рельеф бумаги) одного ползунка обычно мало — двигайте порог
+        фактуры вниз, чувствительность вниз и радиус подавления вверх одновременно.
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="vs-classic">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">MoireRemover vs классический FFT/IFFT</span>
+        <h2>Что выиграно, а что — нет</h2>
+      </div>
+      <div class="split reveal">
+        <div class="split-col">
+          <span class="tag">Классический подход</span>
+          <h3>Chirokov FFT/IFFT и форки</h3>
+          <p style="margin-top:14px; font-size:0.94rem;">Joofa FFT, Ft Pattern Suppressor и
+            похожие плагины требуют вручную стирать шумные точки в спектре при каждом
+            запуске и вручную восстанавливать цвет через смешение слоёв. По признанию
+            авторов даже самых свежих автоматизированных надстроек, снятие подавления
+            с центральной «звезды» спектра вручную до конца автоматизировать не вышло.
+            Зато — больше 15 лет проверки на огромном количестве изображений и родная
+            работа в 16-битном конвейере Photoshop.</p>
+        </div>
+        <div class="split-col is-new">
+          <span class="tag">MoireRemover</span>
+          <h3>Автоматический, но моложе</h3>
+          <p style="margin-top:14px; font-size:0.94rem;">Не требует ручной работы с
+            частотами вообще, сохраняет цвет автоматически и работает неразрушающим
+            слоем. При этом по сырому качеству обработки на большой выборке разных
+            изображений и по работе в высокой битности десятилетиями обкатанный
+            нативный подход всё ещё может иметь преимущество — на этот счёт иллюзий нет.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="install">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Установка</span>
+        <h2>Установщик или копирование папки</h2>
+        <p>Требования: Adobe Photoshop 2020 и новее, Windows или macOS.
+          Работает независимо от способа активации Photoshop — лицензия
+          или пиратка не влияют на работу плагина.</p>
+      </div>
+
+      <div class="install-steps reveal">
+        <div class="cap-card">
+          <h3>Вариант 1 — установщик (Windows)</h3>
+          <p style="margin-top:10px; font-size:0.94rem;">Скачайте
+            <span class="inline-code">MoireRemover_Setup.exe</span> из
+            <a data-releases href="#" style="color:var(--cyan)">Releases</a>,
+            запустите и следуйте подсказкам.</p>
+        </div>
+
+        <div class="cap-card">
+          <h3>Вариант 2 — вручную (обязателен для macOS, подходит и для Windows)</h3>
+          <p style="margin-top:10px; font-size:0.94rem;">Классический CEP ставится
+            копированием папки — Creative Cloud и подписанное расширение не нужны.</p>
+
+          <p style="margin-top:18px; font-size:0.9rem; color:var(--ink);">1. Включите режим разработчика Photoshop:</p>
+          <p style="margin-top:8px; font-size:0.9rem;"><b style="color:var(--ink);">Windows</b> —
+            <span class="inline-code">regedit</span>, раздел
+            <span class="inline-code">HKEY_CURRENT_USER\Software\Adobe</span>. В подразделах
+            <span class="inline-code">CSXS.9</span>, <span class="inline-code">CSXS.10</span>,
+            <span class="inline-code">CSXS.11</span> (создайте, если их нет) добавьте
+            строковый параметр <span class="inline-code">PlayerDebugMode</span> со значением
+            <span class="inline-code">1</span>.</p>
+          <p style="margin-top:10px; font-size:0.9rem;"><b style="color:var(--ink);">macOS</b> — в Terminal:</p>
+<pre>defaults write com.adobe.CSXS.9 PlayerDebugMode 1
+defaults write com.adobe.CSXS.10 PlayerDebugMode 1
+defaults write com.adobe.CSXS.11 PlayerDebugMode 1</pre>
+
+          <p style="margin-top:16px; font-size:0.9rem; color:var(--ink);">2. Скопируйте папку
+            <span class="inline-code">MoireRemover</span> целиком в:</p>
+          <p style="margin-top:8px; font-size:0.9rem;">Windows —
+            <span class="inline-code">%APPDATA%\Adobe\CEP\extensions\</span><br>
+            macOS —
+            <span class="inline-code">~/Library/Application Support/Adobe/CEP/extensions/</span></p>
+
+          <p style="margin-top:16px; font-size:0.9rem; color:var(--ink);">3. Перезапустите Photoshop
+            и откройте <span class="inline-code">Window ▸ Extensions ▸ Moire Remover (Auto)</span>.</p>
+        </div>
+
+        <p class="btn-note">Подробный разбор проблем с установкой — в README.txt внутри папки плагина.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="usage">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Использование</span>
+        <h2>Четыре шага</h2>
+      </div>
+      <div class="flow reveal">
+        <div class="flow-step"><div class="num"></div><div><h3>Откройте скан</h3><p>Откройте скан в Photoshop.</p></div></div>
+        <div class="flow-step"><div class="num"></div><div><h3>Выберите слой</h3><p>Сделайте активным слой, который нужно очистить от муара — он должен быть самым верхним в стопке.</p></div></div>
+        <div class="flow-step"><div class="num"></div><div><h3>Нажмите кнопку</h3><p>Нажмите «Убрать муар» в панели.</p></div></div>
+        <div class="flow-step"><div class="num"></div><div><h3>Готово</h3><p>Дождитесь прогресс-бара. Сверху появится новый слой с результатом.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section id="structure">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Структура проекта</span>
+        <h2>Что внутри папки плагина</h2>
+      </div>
+      <div class="tree reveal">MoireRemover/
+├── CSXS/
+│   └── manifest.xml       <span class="cmt">— манифест CEP-расширения</span>
+├── client/
+│   ├── <span class="path">index.html</span>         <span class="cmt">— интерфейс панели</span>
+│   ├── <span class="path">style.css</span>           <span class="cmt">— оформление (тёмная тема под Photoshop)</span>
+│   ├── <span class="path">index.js</span>            <span class="cmt">— логика панели, связь с Photoshop</span>
+│   ├── <span class="path">fft.js</span>               <span class="cmt">— своя реализация 2D FFT (Cooley-Tukey)</span>
+│   └── <span class="path">moire.js</span>             <span class="cmt">— детекторы муара/фактуры и notch-подавление</span>
+├── jsx/
+│   └── <span class="path">hostscript.jsx</span>      <span class="cmt">— ExtendScript: экспорт/импорт слоя</span>
+└── README.txt              <span class="cmt">— подробная инструкция по установке и использованию</span></div>
+    </div>
+  </section>
+</main>
+
+<section class="cta-band">
+  <div class="wrap">
+    <span class="eyebrow">Готовы попробовать</span>
+    <h2 class="reveal">Один клик вместо получаса со спектром</h2>
+    <div class="btn-row reveal">
+      <a class="btn btn-primary" data-download href="#" download>Скачать установщик</a>
+      <a class="btn btn-ghost" href="index.html">На главную</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <div class="nav-logo" style="margin-bottom:10px;">
+        <svg width="16" height="16" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="var(--amber)" stroke-width="1.4"/><circle cx="9" cy="9" r="1.8" fill="var(--amber)"/></svg>
+        MOIRE&nbsp;REMOVER
+      </div>
+      <p class="footer-mark">CEP-плагин для Adobe Photoshop 2020+ · Windows и macOS</p>
+    </div>
+    <ul class="footer-links">
+      <li><a href="index.html">Главная</a></li>
+      <li><a data-repo href="#">Исходный код на GitHub</a></li>
+      <li><a href="mailto:tidesluck@icloud.com">tidesluck@icloud.com</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
